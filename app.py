@@ -1,6 +1,5 @@
 from flask import Flask, request
-from utils import generate_address
-import csv
+from utils import generate_address, average_count
 
 
 app = Flask('flask_app')
@@ -10,8 +9,8 @@ app = Flask('flask_app')
 @app.route("/")
 def first_page():
     return "Write /requirements/ to open this" \
-           "\nOr /generate-users/ using ?amount=..." \
-           "\nOr /mean/"
+           "    Or /generate-users/ using ?amount=..." \
+           "    Or /mean/"
 
 
 # Outputting requirements.txt
@@ -25,11 +24,11 @@ def read_file():
 # Generating users + their email's addresses
 @app.route("/generate-users/")
 def name_user():
-    query_params = request.args
-    amount = query_params.get('amount') or ''
-    default_amount = 50
+    default_amount = 100
     min_amount = 10
-    max_amount = 100
+    max_amount = 300
+    query_params = request.args
+    amount = query_params.get('amount') or f'{default_amount}'
 
     if amount.isdigit():
         amount = int(amount)
@@ -42,23 +41,7 @@ def name_user():
 # Working with .csv file
 @app.route("/mean/")
 def counter():
-    file = 'hw.csv'
-    with open(file, newline='') as file:
-        reader = csv.reader(file, delimiter=',')
-        line_count = 0
-        block = ''
-        for row in reader:
-            if line_count == 0:
-                block += ', '.join(row)
-                line_count += 1
-            else:
-                block += '\n' + ''.join(row[0]) + ', ' + ''.join(row[1]) + ', ' + ''.join(row[2])
-                line_count += 1
-            if line_count == 5:
-                break
-        #print(f'lines: {line_count}')
-        print(block)
-        return block
+    return average_count()
 
 
 if __name__ == '__main__':
