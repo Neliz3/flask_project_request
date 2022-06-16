@@ -1,5 +1,6 @@
 from flask import Flask, request
 from utils import generate_address, average_count
+import requests
 
 
 app = Flask('flask_app')
@@ -8,9 +9,10 @@ app = Flask('flask_app')
 # Starting page
 @app.route("/")
 def first_page():
-    return "Write /requirements/ to open this" \
-           "    Or /generate-users/ using ?amount=..." \
-           "    Or /mean/"
+    return "Write /requirements/" \
+           "    *** /generate-users/ using ?amount=..." \
+           "    *** /mean/" \
+           "    *** /space/"
 
 
 # Outputting requirements.txt
@@ -42,6 +44,16 @@ def name_user():
 @app.route("/mean/")
 def counter():
     return average_count()
+
+
+# Getting data from .json file with key = 'number'
+@app.route("/space/")
+def number_astronauts():
+    r = requests.get('http://api.open-notify.org/astros.json')
+    a = r.json()
+    data = str(a['number'])
+    amount = f'Amount of astronauts in space is {data}'
+    return amount
 
 
 if __name__ == '__main__':
