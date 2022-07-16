@@ -1,6 +1,7 @@
 from flask import Flask, request
 from utils import generate_address, average_count
 import requests
+import sqlite3
 
 
 app = Flask('flask_app')
@@ -12,7 +13,8 @@ def first_page():
     return "Write /requirements/" \
            "    *** /generate-users/ using ?amount=..." \
            "    *** /mean/" \
-           "    *** /space/"
+           "    *** /space/" \
+           "    *** /users/number/"
 
 
 # Outputting requirements.txt
@@ -56,5 +58,19 @@ def number_astronauts():
     return amount
 
 
+@app.route('/users/number/')
+def users_number():
+    con = sqlite3.connect('phones.db')
+    cur = con.cursor()
+    sql = """
+    INSERT INTO phones
+    VALUES (null, 0123456789)"""
+    cur.execute(sql)
+    con.commit()
+    con.close()
+
+    return 'users_number'
+
+
 if __name__ == '__main__':
-    app.run(port=5557)
+    app.run(port=5557, debug=True)
