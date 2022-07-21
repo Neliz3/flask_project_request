@@ -2,6 +2,7 @@ from flask import Flask, request
 from utils import generate_address, average_count
 import requests
 import sqlite3
+from db_create import executing
 
 
 app = Flask('flask_app')
@@ -14,7 +15,10 @@ def first_page():
            "    *** /generate-users/ using ?amount=..." \
            "    *** /mean/" \
            "    *** /space/" \
-           "    *** /users/number/"
+           "    *** /users/numbers/" \
+           "    *** /users/numbers/add/?number=123" \
+           "    *** /users/numbers/update/?old_num=123&new_num=000" \
+           "    *** /users/numbers/delete/?number_del=000"
 
 
 # Outputting requirements.txt
@@ -58,18 +62,58 @@ def number_astronauts():
     return amount
 
 
-@app.route('/users/number/')
-def users_number():
+@app.route('/users/numbers/add/')
+def user_number_add():
+    query_params = request.args
+    u_number = query_params.get('number') or '0123456789'
+
     con = sqlite3.connect('phones.db')
     cur = con.cursor()
-    sql = """
+
+    sql = f"""
     INSERT INTO phones
-    VALUES (null, 0123456789)"""
+    VALUES (null, '{u_number}')"""
     cur.execute(sql)
     con.commit()
     con.close()
 
-    return 'users_number'
+    return f"Number: '{u_number}' was added"
+
+
+@app.route('/users/numbers/')
+def numbers_show():
+
+    con = sqlite3.connect('phones.db')
+    cur = con.cursor()
+
+    sql = """SELECT * FROM phones"""
+    cur.execute(sql)
+    users_list = cur.fetchall()
+    # breakpoint()
+    con.close()
+    return str(users_list)
+
+
+@app.route('/users/numbers/update/')
+def number_update():
+    query_params = request.args
+    old_number = query_params.get('old_num') or '0123456789'
+    new_number = query_params.get('new_num') or '000'
+
+    sql = f"""UPDATE phones SET value='{new_number}' WHERE value='{old_number}'"""
+    sms = f"'{old_number}' was updated to '{new_number}'"
+    return executing(old_number, sql, sms)
+
+
+# Deleting user's number
+@app.route('/users/numbers/delete/')
+def number_delete():
+    query_params = request.args
+    number_del = query_params.get('number_del') or '0123456789'
+
+    sql = f"""DELETE FROM phones WHERE value='{number_del}'"""
+    sms = f"'{number_del}' was deleted"
+    return executing(number_del, sql, sms)
 
 
 if __name__ == '__main__':
