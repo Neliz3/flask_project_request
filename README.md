@@ -1,4 +1,4 @@
-# Project | Flask + requests + JSON
+# Project | Studying
 Web application
 
 ## Technologies Used
@@ -6,3 +6,6 @@ Web application
 * Faker
 * Flask
 * requests
+* sqlite3
+* sql
+* Django
