@@ -22,7 +22,7 @@ def generate_address(amount: int):
     return box
 
 
-# Average
+# Counting an average value
 def average_count():
     file = 'hw.csv'
     with open(file, newline='') as file:

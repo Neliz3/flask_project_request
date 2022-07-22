@@ -62,6 +62,8 @@ def number_astronauts():
     return amount
 
 
+# Dealing with database
+# Adding value to database
 @app.route('/users/numbers/add/')
 def user_number_add():
     query_params = request.args
@@ -80,6 +82,7 @@ def user_number_add():
     return f"Number: '{u_number}' was added"
 
 
+# Inserting value from database
 @app.route('/users/numbers/')
 def numbers_show():
 
@@ -94,6 +97,7 @@ def numbers_show():
     return str(users_list)
 
 
+# Updating value in database
 @app.route('/users/numbers/update/')
 def number_update():
     query_params = request.args
@@ -105,7 +109,7 @@ def number_update():
     return executing(old_number, sql, sms)
 
 
-# Deleting user's number
+# Deleting value from database
 @app.route('/users/numbers/delete/')
 def number_delete():
     query_params = request.args

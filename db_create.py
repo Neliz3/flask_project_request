@@ -1,6 +1,7 @@
 import sqlite3
 
 
+# Creating database
 def create_db():
     con = sqlite3.connect('phones.db')
     cur = con.cursor()
@@ -12,6 +13,7 @@ def create_db():
     con.close()
 
 
+# Connecting to database and error checking
 def executing(search_data, sql, sms):
     con = sqlite3.connect('phones.db')
     cur = con.cursor()
@@ -20,7 +22,7 @@ def executing(search_data, sql, sms):
         cur.execute(sql_search)
         result = cur.fetchall()
 
-        # Exception. Does number_del exist in database?
+        # Exception. Does search_data exist in database?
         if not result:
             return f"'{search_data}' does not exist in database"
         else:
